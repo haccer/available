@@ -12,6 +12,10 @@ import (
 func Domain(domain string) (available, badtld bool) {
 	available = false
 
+	if strings.Contains(domain, "://") {
+		domain = strings.Split(domain, "://")[1]
+	}
+
 	domain = strings.ToLower(domain)
 
 	tld, icann := publicsuffix.PublicSuffix(domain)
