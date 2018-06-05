@@ -8,16 +8,14 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-// Domain Returns if the domain is available (success) or if there's a badtld (fail)
-func Domain(domain string) (available, badtld bool) {
+/* SafeDomain utilizes the badtld checklist as a triage step, 
+ then returns whether the domain is available and/or if the
+ domain has a "bad" tld.
+*/
+func SafeDomain(domain string) (available, badtld bool) {
 	available = false
 
-	if strings.Contains(domain, "://") {
-		domain = strings.Split(domain, "://")[1]
-	}
-
-	domain = strings.ToLower(domain)
-
+	domain = setDomain(domain)
 	tld, icann := publicsuffix.PublicSuffix(domain)
 	badtld = badTLD(tld)
 
@@ -33,6 +31,37 @@ func Domain(domain string) (available, badtld bool) {
 	}
 
 	return available, badtld
+}
+
+/* Domain returns if the domain is available or not. 
+ This function does not have a triage step, and will
+ result in testing each TLD with one of the default
+ responses.
+*/
+func Domain(domain string) (available bool) {
+	available = false
+
+	domain = setDomain(domain)
+	tld, icann := publicsuffix.PublicSuffix(domain)
+
+	if icann == true {
+		query, err := publicsuffix.EffectiveTLDPlusOne(domain)
+		if err != nil {
+			return
+		}
+
+		available = match(tld, getWhois(query))
+	}
+
+	return available
+}
+
+func setDomain(domain string) string {
+	if strings.Contains(domain, "://") {
+		domain = strings.Split(domain, "://")[1]
+	}
+
+	return strings.ToLower(domain)
 }
 
 func match(tld, resp string) (available bool) {
