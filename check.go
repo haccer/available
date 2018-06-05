@@ -8,7 +8,7 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-func Domain(domain string) (available bool, badtld bool) {
+func Domain(domain string) (available, badtld bool) {
 	available = false
 
 	domain = strings.ToLower(domain)
