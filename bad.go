@@ -6,7 +6,7 @@ timeout and result in bad responses.
 */
 
 func badtlds() []string {
-	bad_tlds := []string{
+	tlds := []string{
 		"abarth",
 		"abbvie",
 		"abc",
@@ -524,5 +524,5 @@ func badtlds() []string {
 		"xn--mgbx4cd0ab",
 	}
 
-	return bad_tlds
+	return tlds
 }
