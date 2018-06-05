@@ -1031,8 +1031,7 @@ func fingerprints() map[string]string {
 
 // List of all possible "available" responses.
 func all_fingerprints() []string {
-
-	all_fprints := []string{
+	fprints := []string{
 		"220 available",
 		"available for purchase",
 		"but this server does not have",
@@ -1071,5 +1070,5 @@ func all_fingerprints() []string {
 		"was not found",
 	}
 
-	return all_fprints
+	return fprints
 }
