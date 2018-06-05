@@ -60,6 +60,10 @@ func setDomain(domain string) string {
 	if strings.Contains(domain, "://") {
 		domain = strings.Split(domain, "://")[1]
 	}
+	
+	if domain[len(domain)-1:] == "." {
+		domain = domain[:len(domain)-1]
+	}
 
 	return strings.ToLower(domain)
 }
