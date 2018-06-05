@@ -8,7 +8,7 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-// Returns if the domain is available (success) or if there's a badtld (fail)
+// Domain Returns if the domain is available (success) or if there's a badtld (fail)
 func Domain(domain string) (available, badtld bool) {
 	available = false
 
