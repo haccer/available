@@ -3,6 +3,9 @@ package available
 /* List of TLDs that have no whois server
 or whois won't make calls to them, or they
 timeout and result in bad responses.
+
+Will match these with appropriate whois 
+servers later.
 */
 
 func badtlds() []string {
