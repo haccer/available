@@ -8,9 +8,9 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-/* SafeDomain utilizes the badtld checklist as a triage step, 
- then returns whether the domain is available and/or if the
- domain has a "bad" tld.
+/* SafeDomain utilizes the badtld checklist as a triage step,
+then returns whether the domain is available and/or if the
+domain has a "bad" tld.
 */
 func SafeDomain(domain string) (available, badtld bool) {
 	available = false
@@ -33,10 +33,10 @@ func SafeDomain(domain string) (available, badtld bool) {
 	return available, badtld
 }
 
-/* Domain returns if the domain is available or not. 
- This function does not have a triage step, and will
- result in testing each TLD with one of the default
- responses.
+/* Domain returns if the domain is available or not.
+This function does not have a triage step, and will
+result in testing each TLD with one of the default
+responses.
 */
 func Domain(domain string) (available bool) {
 	available = false
@@ -60,9 +60,11 @@ func setDomain(domain string) string {
 	if strings.Contains(domain, "://") {
 		domain = strings.Split(domain, "://")[1]
 	}
-	
-	if domain[len(domain)-1:] == "." {
-		domain = domain[:len(domain)-1]
+
+	if len(domain) < 1 {
+		if domain[len(domain)-1:] == "." {
+			domain = domain[:len(domain)-1]
+		}
 	}
 
 	return strings.ToLower(domain)
