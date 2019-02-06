@@ -38,22 +38,22 @@ This function does not have a triage step, and will
 result in testing each TLD with one of the default
 responses.
 */
-func Domain(domain string) (available bool) {
-	available = false
-
+func Domain(domain string) (bool, error) {
 	domain = setDomain(domain)
 	tld, icann := publicsuffix.PublicSuffix(domain)
+
+	var available bool
 
 	if icann == true {
 		query, err := publicsuffix.EffectiveTLDPlusOne(domain)
 		if err != nil {
-			return
+			return false, err
 		}
 
 		available = match(tld, getWhois(query))
 	}
 
-	return available
+	return available, nil
 }
 
 func setDomain(domain string) string {
