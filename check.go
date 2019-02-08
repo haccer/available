@@ -26,7 +26,12 @@ func SafeDomain(domain string) (available, badtld bool) {
 		}
 
 		if !badtld {
-			available = match(tld, getWhois(query))
+			whois, err := getWhois(query)
+			if err != nil {
+				return
+			}
+
+			available = match(tld, whois)
 		}
 	}
 
@@ -50,7 +55,12 @@ func Domain(domain string) (bool, error) {
 			return false, err
 		}
 
-		available = match(tld, getWhois(query))
+		whois, err := getWhois(query)
+		if err != nil {
+			return false, err
+		}
+
+		available = match(tld, whois)
 	}
 
 	return available, nil
@@ -107,18 +117,18 @@ func match(tld, resp string) (available bool) {
 }
 
 // Makes whois request, returns resposne as string
-func getWhois(domain string) (response string) {
+func getWhois(domain string) (string, error) {
 	req, err := whois.NewRequest(domain)
 	if err != nil {
-		return
+		return "", err
 	}
 
 	resp, err := whois.DefaultClient.Fetch(req)
 	if err != nil {
-		return
+		return "", err
 	}
 
-	return fmt.Sprintf("%s", resp)
+	return fmt.Sprintf("%s", resp), nil
 }
 
 // Checks if the TLD is apart of our "bad tld" list
