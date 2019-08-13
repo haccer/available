@@ -940,7 +940,7 @@ func fingerprints() map[string]string {
 		"xn--fiqs8s":               "No matching record",
 		"ax":                       "Invalid domain name",
 		"xn--90a3ac":               "Invalid domain name",
-		"be":                       "Status: AVAILABLE",
+		"be":                       "Status:	AVAILABLE",
 		"it":                       "AVAILABLE",
 		"by":                       "Object does not exist",
 		"nz":                       "220 Available",
