@@ -26,7 +26,12 @@ func SafeDomain(domain string) (available, badtld bool) {
 		}
 
 		if !badtld {
-			available = match(tld, getWhois(query))
+			whois, err := getWhois(query)
+			if err != nil {
+				return
+			}
+
+			available = match(tld, whois)
 		}
 	}
 
@@ -38,22 +43,27 @@ This function does not have a triage step, and will
 result in testing each TLD with one of the default
 responses.
 */
-func Domain(domain string) (available bool) {
-	available = false
-
+func Domain(domain string) (bool, error) {
 	domain = setDomain(domain)
 	tld, icann := publicsuffix.PublicSuffix(domain)
+
+	var available bool
 
 	if icann == true {
 		query, err := publicsuffix.EffectiveTLDPlusOne(domain)
 		if err != nil {
-			return
+			return false, err
 		}
 
-		available = match(tld, getWhois(query))
+		whois, err := getWhois(query)
+		if err != nil {
+			return false, err
+		}
+
+		available = match(tld, whois)
 	}
 
-	return available
+	return available, nil
 }
 
 func setDomain(domain string) string {
@@ -107,18 +117,18 @@ func match(tld, resp string) (available bool) {
 }
 
 // Makes whois request, returns resposne as string
-func getWhois(domain string) (response string) {
+func getWhois(domain string) (string, error) {
 	req, err := whois.NewRequest(domain)
 	if err != nil {
-		return
+		return "", err
 	}
 
 	resp, err := whois.DefaultClient.Fetch(req)
 	if err != nil {
-		return
+		return "", err
 	}
 
-	return fmt.Sprintf("%s", resp)
+	return fmt.Sprintf("%s", resp), nil
 }
 
 // Checks if the TLD is apart of our "bad tld" list

@@ -23,7 +23,10 @@ import (
 func main() {
         domain := "dreamdomain.io"
 
-        available := available.Domain(domain)
+        available, err := available.Domain(domain)
+        if err != nil {
+                panic(err)
+        }
 
         if available {
                 fmt.Println("[+] Success!")
