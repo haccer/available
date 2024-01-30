@@ -26,7 +26,7 @@ func SafeDomain(domain string) (available, badtld bool) {
 		}
 
 		if !badtld {
-			available = match(tld, getWhois(query))
+			available = match(tld, getWhois(tld, query))
 		}
 	}
 
@@ -50,7 +50,7 @@ func Domain(domain string) (available bool) {
 			return
 		}
 
-		available = match(tld, getWhois(query))
+		available = match(tld, getWhois(tld, query))
 	}
 
 	return available
@@ -107,10 +107,15 @@ func match(tld, resp string) (available bool) {
 }
 
 // Makes whois request, returns resposne as string
-func getWhois(domain string) (response string) {
+func getWhois(tld string, domain string) (response string) {
 	req, err := whois.NewRequest(domain)
 	if err != nil {
 		return
+	}
+
+	if tld == "tv" {
+		req.Host = "whois.nic.tv"
+		req.Body = []byte(fmt.Sprintf("%s\r\n", req.Query))
 	}
 
 	resp, err := whois.DefaultClient.Fetch(req)
