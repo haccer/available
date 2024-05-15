@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/domainr/whois v0.1.0
-	golang.org/x/net v0.20.0
+	golang.org/x/net v0.23.0
 )
 
 require (
